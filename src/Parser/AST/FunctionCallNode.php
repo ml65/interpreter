@@ -18,21 +18,17 @@ class FunctionCallNode extends AstNode {
         $evaluatedParams = array_map(fn($param) => $param->evaluate($args), $this->parameters);
         
         return match ($this->functionName) {
-            'array' => count($evaluatedParams) === 2 && is_string($evaluatedParams[0])
+            'array' => count($evaluatedParams) === 2 
                 ? [$evaluatedParams[0] => $evaluatedParams[1]]
                 : $evaluatedParams,
             'concat' => implode('', $evaluatedParams),
-            'map' => array_reduce(
-                $evaluatedParams[0],
-                fn($carry, $item) => array_merge(
-                    $carry,
-                    $this->parameters[1]->evaluate(array_merge($args, [$item]))
-                ),
-                []
+            'map' => array_map(
+                fn($item) => ['message' => $this->parameters[1]->evaluate(array_merge($args, [$item]))[0]],
+                $evaluatedParams[0]
             ),
-            'json' => json_encode($evaluatedParams[0]),
+            'json' => json_encode($evaluatedParams[0][0], JSON_UNESCAPED_UNICODE),
             'getArg' => $args[(int)$evaluatedParams[0]] ?? null,
-            default => throw new Exception("Unknown function: {$this->functionName}")
+            default => throw new \Exception("Unknown function: {$this->functionName}")
         };
     }
 } 
