@@ -2,6 +2,11 @@
 
 namespace App\Parser;
 
+use Exception;
+use App\Parser\AST\ASTNode;
+use App\Parser\AST\FunctionCallNode;
+use App\Parser\AST\ConstantNode;
+
 // Парсер
 class Parser {
     private array $tokens;

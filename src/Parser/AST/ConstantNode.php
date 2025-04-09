@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Lexer;
+namespace App\Parser\AST;
 
 use App\Interfaces\ASTNodeInterface;
 
-// Узел константы
-class ConstantNode implements ASTNodeInterface {
+class ConstantNode extends AstNode {
+
     public function __construct(private string $value) {}
 
     public function evaluate(array $args = []): mixed {
