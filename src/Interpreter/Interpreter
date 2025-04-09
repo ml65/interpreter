@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Interpreter;
+
+// Интерпретатор
+class Interpreter {
+    public function interpret(string $program, array $externalArgs = []): mixed {
+        $lexer = new Lexer($program);
+        $tokens = $lexer->tokenize();
+        $parser = new Parser($tokens);
+        $ast = $parser->parse();
+        return $ast->evaluate($externalArgs);
+    }
+}
